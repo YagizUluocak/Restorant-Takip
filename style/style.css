@@ -1,0 +1,100 @@
+/* Genel sayfa stil ayarları */
+body {
+    height: 100%;
+    margin: 0;
+    background-color: #f8f9fa; /* Hafif bir açık gri tonu */
+    font-family: 'Arial', sans-serif;
+    padding-top: 50px; /* Daha fazla boşluk */
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px; /* Daha geniş içerik alanı */
+    border-radius: 10px; /* Daha belirgin köşeler */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif bir gölge */
+}
+
+/* Tablo stilleri */
+.table {
+    background-color: #fff;
+    border-radius: 5px; /* Hafif yuvarlatılmış köşeler */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Daha belirgin gölge */
+}
+
+/* Form stilleri */
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-control {
+    border-radius: 5px; /* Hafif yuvarlatılmış köşeler */
+    border: 1px solid #ccc; /* Hafif bir çerçeve */
+    padding: 8px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff; /* Bootstrap mavi rengi */
+    border-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Koyu mavi hover efekti */
+    border-color: #0056b3;
+}
+
+/* Genel sidebar stilleri */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #343a40; /* Sidebar arka plan rengi */
+    padding-top: 20px;
+}
+
+/* Sidebar linkleri */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #495057; /* Hover rengi */
+    border-left: 5px solid #fff; /* Hover efekti */
+    padding-left: 15px; /* Aralık bırakma */
+}
+
+/* Wrapper ve içerik alanı */
+.wrapper {
+    display: flex;
+    height: 100%;
+}
+
+
+.content {
+    margin-left: 250px; /* Sidebar genişliği kadar kaydır */
+    padding: 20px;
+    background-color: #f8f9fa; /* İçerik arka plan rengi */
+}
+
+
+
