@@ -119,7 +119,6 @@ class Kategori extends Db
         $kategori_id     = $_GET["kategori_id"];
         $kategori_adi    = $_POST["kategori_adi"];
 
-
         $query = "UPDATE kategoriler SET kategori_adi=:kategori_adi WHERE kategori_id=:kategori_id";
         $stmt = $this->connect()->prepare($query);
         return $stmt->execute([
@@ -143,7 +142,10 @@ class Urun extends Db
 {
     public function urunGetir()
     {
-        $query = "SELECT * FROM urunler";
+        $query = "SELECT * FROM urunler 
+        INNER JOIN kategoriler ON
+        urunler.kategori_id = kategoriler.kategori_id
+        ";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();

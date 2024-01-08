@@ -2,19 +2,23 @@
 require_once('../classes/db.class.php');
 include "../classes/functions.class.php";
 
-$added = false;
-$Kategori = new Kategori();
-$kategoriGetir = $Kategori->kategoriGetir();
-
-if(isset($_POST["submit"]))
+$updated = false;
+if(isset($_GET["urun_id"]))
 {
     $Urun = new Urun();
-    $urunEkle = $Urun->urunEkle();
+    $urunIdGetir = $Urun->urunIDGetir();
 
-    if($urunEkle)
+    $Kategori = new Kategori();
+    $kategoriGetir = $Kategori->kategoriGetir();
+
+    if(isset($_POST["submit"]))
     {
-        $added = true;
-        ?>
+        $urunGuncelle = $Urun->urunGuncelle();
+
+        if($urunGuncelle)
+        {
+            $updated = true;
+            ?>
             <!-- İşlem gerçekleşmesi durumunda Sayfa yönlendirmesi -->
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -23,19 +27,22 @@ if(isset($_POST["submit"]))
         
                     setTimeout(function() {
                         window.location.href = 'urun-list.php';
-                    }, 1700); // 1.7 saniye
+                    }, 1500); // 1.5 saniye
                 });
             </script>
         <?php
+        }
+
     }
 
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Yeni Ürün Ekle</title>
+    <title>Ürün Güncelle</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="../style/style.css" rel="stylesheet">
 </head>
@@ -45,28 +52,28 @@ if(isset($_POST["submit"]))
 
         <div class="content">
             <div class="container">
-                <h1>Yeni Ürün Ekle</h1>
+                <h1>Ürün Güncelle</h1>
                 <?php
-                    if($added)
-                    {
-                        ?>
-                            <div class="alert alert-success text-center" role="alert" id="alertBox">
-                                <h6 style="color: black;">Kayıt İşlemi Başarıyla Gerçekleştirildi. Yönlendiriliyor!</h6>
-                            </div>
-                        <?php
-                    }
-                ?>   
+                        if($updated)
+                        {
+                            ?>
+                                <div class="alert alert-success text-center" role="alert" id="alertBox">
+                                    <h6 style="color: black;">Güncelleme İşlemi Başarıyla Gerçekleştirildi. Yönlendiriliyor!</h6>
+                                </div>
+                            <?php
+                        }
+                        ?>   
                 <form method="POST">
                     <div class="form-group">
                         <label for="urun_adi">Ürün Adı</label>
-                        <input type="text" class="form-control" name="urun_adi">
+                        <input type="text" class="form-control" id="urun_adi" name="urun_adi" value="<?php echo $urunIdGetir->urun_adi?>">
                     </div>
                     <div class="form-group">
-                        <label for="fiyat">Ürün Fiyatı</label>
-                        <input type="text" class="form-control" name="urun_fiyat">
+                        <label for="urun_fiyat">Fiyat</label>
+                        <input type="text" class="form-control" id="urun_fiyat" name="urun_fiyat" value="<?php echo $urunIdGetir->urun_fiyat?>">
                     </div>
                     <div class="form-group">
-                        <label for="fiyat">Kategori</label>
+                        <label for="kategori_id">Kategori</label>
                         <select name="kategori_id" id="kategori_id" name="kategori_id" class="form-control" value="<?php echo $kategori->kategori_id?>">
                             <?php
                             foreach($kategoriGetir as $kategori)
@@ -78,7 +85,7 @@ if(isset($_POST["submit"]))
                             ?>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" name="submit">Kaydet</button>
+                    <button type="submit" class="btn btn-primary" name="submit">Güncelle</button>
                 </form>
             </div>
         </div>
