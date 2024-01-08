@@ -1,3 +1,11 @@
+<?php
+require_once('../classes/db.class.php');
+include "../classes/functions.class.php";
+
+$Siparis = new Siparis();
+$siparisGetir = $Siparis->siparisGetir();
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -17,29 +25,36 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Masa ID</th>
+                            <th>Masa Adı</th>
                             <th>Sipariş Tarihi</th>
                             <th>Sipariş Durumu</th>
                             <th>Sipariş Detay</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- PHP ile dinamik olarak veri çekilebilir -->
-                        <tr>
-                            <td>1</td>
-                            <td>5</td>
-                            <td>2024-01-01 10:00:00</td>
-                            <td>Onaylandı</td>
-                            <td><a class="btn btn-warning btn-sm" href="#"><i class="fa fa-trash"></i> Detay Gör</a></td>                
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>7</td>
-                            <td>2024-01-02 12:00:00</td>
-                            <td>Beklemede</td>
-                            <td><a class="btn btn-warning btn-sm" href="#"><i class="fa fa-trash"></i> Detay Gör</a></td>
-                        </tr>
-                    </tbody>
+                    <?php
+                    if($siparisGetir)
+                    {
+                        ?>
+                        <tbody>
+                            <?php
+                            foreach($siparisGetir as $siparis)
+                            {
+                                ?>
+                                    <tr>
+                                        <td><?php echo $siparis->siparis_id?></td>
+                                        <td><?php echo $siparis->masa_adi?></td>
+                                        <td><?php echo $siparis->siparis_tarihi?></td>
+                                        <td><?php echo $siparis->siparis_durum?></td>
+                                        <td><a class="btn btn-warning btn-sm" href="siparis-detaylar.php?siparis_id=<?php echo $siparis->siparis_id?>"><i class="fa fa-trash"></i> Detay Gör</a></td>                
+                                    </tr>
+                                <?php
+                            }
+                            ?>
+
+                        </tbody>
+                        <?php
+                    }
+                    ?>
                 </table>
             </div>
         </div>

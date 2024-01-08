@@ -1,3 +1,36 @@
+<?php
+require_once('../classes/db.class.php');
+include "../classes/functions.class.php";
+
+$added = false;
+
+$masa = new masa();
+$masaGetir = $masa->masaGetir();
+
+$Siparis = new Siparis();
+if(isset($_POST['submit']))
+{
+    $siparisEkle = $Siparis->siparisEkle();
+    if($siparisEkle)
+    {
+        $added = true;
+        ?>
+            <!-- İşlem gerçekleşmesi durumunda Sayfa yönlendirmesi -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var alertBox = document.getElementById('alertBox');
+                    alertBox.style.display = 'block';
+        
+                    setTimeout(function() {
+                        window.location.href = 'siparis-list.php';
+                    }, 1600); // 1.6 saniye
+                });
+            </script>
+        <?php
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -13,16 +46,39 @@
         <div class="content">
             <div class="container">
                 <h1>Yeni Sipariş Ekle</h1>
-                <form>
+                <?php
+                if($added == true)
+                {
+                    ?>
+                        <div class="alert alert-success text-center" role="alert" id="alertBox">
+                            <h6 style="color: black;">Kayıt İşlemi Başarıyla Gerçekleştirildi. Yönlendiriliyor!</h6>
+                        </div>
+                    <?php
+                }
+                ?>
+                <form method="POST">
                     <div class="form-group">
-                        <label for="masa_id">Masa ID</label>
-                        <input type="text" class="form-control" id="masa_id">
+                        <label for="masa_id">Masa</label>
+                        <select name="masa_id" class="form-control">
+                            <?php
+                                foreach($masaGetir as $masa)
+                                {
+                                    ?>
+                                    <option name="masa_id" value="<?php echo $masa->masa_id?>"><?php echo $masa->masa_adi?></option>
+                                    <?php
+                                }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="siparis_durumu">Sipariş Durumu</label>
-                        <input type="text" class="form-control" id="siparis_durumu">
+                        <label for="siparis_tarihi">Sipariş Tarihi</label>
+                        <input type="date" data-date-format="mm/dd/yyyy" class="form-control" name="siparis_tarihi">
                     </div>
-                    <button type="submit" class="btn btn-primary">Ekle</button>
+                    <div class="form-group">
+                        <label for="siparis_durum">Sipariş Durumu</label>
+                        <input type="text" class="form-control" name="siparis_durum">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="submit">Ekle</button>
                 </form>
             </div>
         </div>

@@ -250,6 +250,72 @@ class Masa extends Db
     }
 }
 
+class Siparis extends Db
+{
+    public function siparisGetir()
+    {
+        $query = "SELECT * FROM siparisler
+        INNER JOIN masalar on
+        siparisler.masa_id = masalar.masa_id";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function siparisIdGetir()
+    {
+       $siparis_id = $_GET['siparis_id'];
+
+       $query = "SELECT * FROM siparisler
+       INNER JOIN masalar on
+       siparisler.masa_id = masalar.masa_id WHERE siparis_id =:siparis_id"; 
+       $stmt = $this->connect()->prepare($query);
+       return $stmt->execute(['siparis_id' => $siparis_id]);
+    }
+    
+    public function siparisEkle()
+    {
+        $masa_id = $_POST['masa_id'];
+        $siparis_tarihi = $_POST['siparis_tarihi'];
+        $siparis_durum = $_POST['siparis_durum'];
+
+        $query = "INSERT INTO siparisler (masa_id, siparis_tarihi, siparis_durum) VALUES (:masa_id, :siparis_tarihi, :siparis_durum)";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([
+            'masa_id' => $masa_id,
+            'siparis_tarihi' => $siparis_tarihi,
+            'siparis_durum' => $siparis_durum
+        ]);
+    }
+
+    public function siparisGuncelle()
+    {
+        $siparis_id = $_GET['siparis_id'];
+        $masa_id = $_POST['masa_id'];
+        $siparis_tarihi = $_POST['siparis_tarihi'];
+        $siparis_durum = $_POST['siparis_durum'];
+
+        $query = "UPDATE siparisler SET masa_id=:masa_id, siparis_tarihi=:siparis_tarihi, siparis_durum=:siparis_durum WHERE siparis_id=:siparis_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([
+            'siparis_id' => $siparis_id,
+            'masa_id' => $masa_id,
+            'siparis_tarihi' => $siparis_tarihi,
+            'siparis_durum' => $siparis_durum
+        ]);
+    }
+
+    public function siparisIptal()
+    {
+        $siparis_id = $_GET['siparis_id'];
+        
+        $query = "DELETE FROM siparisler WHERE siparis_id=:siparis_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute(['siparis_id' => $siparis_id]);
+    }
+    
+}
+
 
 
 ?>
