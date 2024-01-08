@@ -270,7 +270,8 @@ class Siparis extends Db
        INNER JOIN masalar on
        siparisler.masa_id = masalar.masa_id WHERE siparis_id =:siparis_id"; 
        $stmt = $this->connect()->prepare($query);
-       return $stmt->execute(['siparis_id' => $siparis_id]);
+       $stmt->execute(['siparis_id' => $siparis_id]);
+       return  $stmt->fetch();
     }
     
     public function siparisEkle()

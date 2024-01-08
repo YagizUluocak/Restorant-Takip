@@ -1,3 +1,11 @@
+<?php
+require_once('../classes/db.class.php');
+include "../classes/functions.class.php";
+
+$Siparis = new Siparis();
+$siparisGetir = $Siparis->siparisGetir();
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
