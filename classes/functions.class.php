@@ -203,6 +203,52 @@ class Urun extends Db
     }
 }
 
+class Masa extends Db
+{
+    public function masaGetir()
+    {
+        $query = "SELECT * FROM masalar";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function masaIdGetir()
+    {
+        $masa_id = $_GET["masa_id"]; 
+        $query = "SELECT * FROM masalar WHERE masa_id=:masa_id";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute(['masa_id' => $masa_id]);
+        return $stmt->fetch();
+    }
+    public function masaEkle()
+    {
+        $masa_adi = $_POST["masa_adi"];
+
+        $query = "INSERT INTO masalar(masa_adi) VALUES (:masa_adi)";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute(['masa_adi' => $masa_adi]);
+    }
+    public function masaGuncelle()
+    {
+        $masa_id = $_GET["masa_id"];
+        $masa_adi = $_POST["masa_adi"];
+
+        $query = "UPDATE masalar SET masa_adi=:masa_adi WHERE masa_id=:masa_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([
+            'masa_id' => $masa_id,
+            'masa_adi' => $masa_adi
+        ]);
+    }
+    public function masaSil()
+    {
+        $masa_id = $_GET["masa_id"];
+
+        $query = "DELETE FROM masalar WHERE masa_id=:masa_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute(['masa_id' => $masa_id]);
+    }
+}
 
 
 
