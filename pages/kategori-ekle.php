@@ -1,3 +1,35 @@
+<?php
+require_once('../classes/db.class.php');
+include "../classes/functions.class.php";
+
+$added = false;
+
+if(isset($_POST["submit"]))
+{ 
+    $Kategori = new Kategori();
+    $KategoriEkle = $Kategori->kategoriEkle();
+    
+    if($KategoriEkle)
+    {
+        $added = true;
+        ?>
+            <!-- İşlem gerçekleşmesi durumunda Sayfa yönlendirmesi -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var alertBox = document.getElementById('alertBox');
+                    alertBox.style.display = 'block';
+        
+                    setTimeout(function() {
+                        window.location.href = 'kategori-list.php';
+                    }, 1700); // 1.7 saniye
+                });
+            </script>
+        <?php
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -13,12 +45,22 @@
             <div class="content">
                 <div class="container">
                     <h1>Yeni Kategori Ekle</h1>
-                    <form>
+                    <?php
+                        if($added)
+                        {
+                            ?>
+                                <div class="alert alert-success text-center" role="alert" id="alertBox">
+                                    <h6 style="color: black;">Kayıt İşlemi Başarıyla Gerçekleştirildi. Yönlendiriliyor!</h6>
+                                </div>
+                            <?php
+                        }
+                        ?>   
+                    <form method="POST">
                         <div class="form-group">
                             <label for="kategori_adi">Kategori Adı</label>
-                            <input type="text" class="form-control" id="kategori_adi">
+                            <input type="text" class="form-control" id="kategori_adi" name="kategori_adi">
                         </div>
-                        <button type="submit" class="btn btn-primary">Ekle</button>
+                        <button type="submit" class="btn btn-primary" name="submit">Ekle</button>
                     </form>
                 </div>
 
