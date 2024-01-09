@@ -2,13 +2,45 @@
 require_once('../classes/db.class.php');
 include "../classes/functions.class.php";
 
+$kontrol = false;
+$deleted = false;
 
+// Sipariş ve Sipariş Detayı nesnelerini oluştur
+$Siparis = new Siparis();
+$SiparisDetay = new SiparisDetay();
 
-if(isset($_GET['siparis_detay_id']))
-{
+// Sipariş ID'sini almak için fonksiyon çağrısı
+$siparisIdGetir = $Siparis->siparisIdGetir();
+$genel_toplam = 0;
+// Eğer sipariş detay ID'si varsa, o detayları getir
+if(isset($_GET['siparis_detay_id'])) {
     $siparis_detay_id = $_GET['siparis_detay_id'];
-    $SiparisDetay = new SiparisDetay();
-    $siparisDetayGetir = $SiparisDetay->SiparisdetayGetir($siparis_detay_id); 
+    $siparisDetayGetir = $SiparisDetay->SiparisdetayGetir($siparis_detay_id);
+    $sipardetayIDGETIR = $SiparisDetay->siparisDetayIdGetir($siparis_detay_id);
+
+}
+
+    // Veritabanından geçerli bir sonuç döndüğünde buraya girilecek
+ 
+    
+
+    // Genel toplam fiyatın hesaplanması
+    
+
+
+// Eğer sipariş ID'si varsa, ilgili siparişi getir ve kontrolü true yap
+if(isset($_GET['siparis_id'])) {
+    $getIdsiparis = $Siparis->getIdsiparis();
+    $kontrol = true;
+}
+
+// Eğer sipariş detayı ID'si ve silme işlemi varsa, ilgili sipariş detayını sil
+if(isset($_GET['siparis_detay_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil') {
+    $siparisDetaySil = $SiparisDetay->siparisDetaySil();
+    if($siparisDetaySil) {
+        $deleted = true;
+        // Silme işlemi gerçekleştikten sonra sayfa yönlendirme işlemi yapılabilir
+    }
 }
 ?>
 
@@ -23,37 +55,47 @@ if(isset($_GET['siparis_detay_id']))
 </head>
 <body>
     <div class="container-fluid">
-    <?php include '../inc/_sidebar.php'; ?>
-    
+        <?php include '../inc/_sidebar.php'; 
+        
+
+        
+        ?>
+        
         <div class="content">
             <div class="container">
                 <h1>Masa1 Sipariş Detayı</h1>
-				<a class="btn btn-success btn-sm mb-2 mt-2" href="kategori-ekle.php"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                <?php if($deleted == true): ?>
+                    <div class="alert alert-success text-center" role="alert" id="alertBox">
+                        <h6 style="color: black;">Kayıt Başarıyla Silindi.</h6>
+                    </div>
+                <?php endif; ?>
 
-                <?php
-                foreach($siparisDetayGetir as $siparis)
-                {
+                <a class="btn btn-success btn-sm mb-2 mt-2" href="siparis-detay-ekle.php<?php
+                    // Yeni Ekle butonu linki oluşturma
+                    echo ($kontrol == true)
+                        ? '?siparis_id=' . $getIdsiparis->siparis_id
+                        : '?siparis_detay_id=' . $siparis_detay_id;
+                ?>">
+                    <i class="fa fa-plus"></i> Yeni Ekle
+                </a>
+
+                <?php foreach($siparisDetayGetir as $siparis): ?>
+                    <?php
+                        $fiyat = ($siparis->urun_fiyat * $siparis->miktar);
+                        $genel_toplam += $fiyat;
                     ?>
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><?php echo $siparis->urun_adi?></h5>
-                            <p class="card-text"></p>
-                            <p class="card-text"><?php echo $siparis->miktar?></p>
-                            <p class="card-text">Toplam Fiyat: 21.98</p>
-                            <a class="btn btn-warning btn-sm" href="siparis-detay-duzenle.php"><i class="fa fa-pen"></i> Düzenle</a>
-                            <a style="top:140px" class="btn btn-danger btn-sm" href="siparis-detay-duzenle.php"><i class="fa fa-trash"></i> İptal</a>          
+                            <!-- Sipariş detaylarını ekrana yazdırma -->
+                            <h5 class="card-title"><?php echo $siparis->urun_adi ?></h5>
+                            <p class="card-text">Birim fiyatı: <?php echo $siparis->urun_fiyat ?> ₺</p>
+                            <p class="card-text">Adet: <?php echo $siparis->miktar ?></p>
+                            <p class="card-text">Fiyat: <?php echo $fiyat?></p>
+                            <a style="top:140px" class="btn btn-danger btn-sm" href="siparis-detaylar.php?siparis_detay_id=<?php echo $siparis->siparis_detay_id ?>&islem=Sil">
+                                <i class="fa fa-trash"></i> İptal
+                            </a>          
                         </div>
                     </div>
+                <?php endforeach; ?>
 
-                    <?php
-          
-                }
-                ?>
-
-                <h3>Genel Toplam Fiyat: 68.45</h3> <!-- Bu kısmı PHP ile hesaplayabilirsiniz -->
-            </div>
-        </div>
-
-    </div>
-</body>
-</html>
+                <h3>Genel Toplam Fiyat: <?php echo  $genel_toplam?></h3> 

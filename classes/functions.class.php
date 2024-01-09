@@ -264,14 +264,31 @@ class Siparis extends Db
 
     public function siparisIdGetir()
     {
-       $siparis_id = $_GET['siparis_id'];
-
-       $query = "SELECT * FROM siparisler
-       INNER JOIN masalar on
-       siparisler.masa_id = masalar.masa_id WHERE siparis_id =:siparis_id"; 
-       $stmt = $this->connect()->prepare($query);
-       $stmt->execute(['siparis_id' => $siparis_id]);
-       return  $stmt->fetch();
+        if(isset($_GET['siparis_detay_id']))
+        {
+            $siparis_id = $_GET['siparis_detay_id'];
+     
+            $query = "SELECT * FROM siparisdetay
+             INNER JOIN siparisler ON siparisler.siparis_id = siparisdetay.siparis_id
+             WHERE siparisdetay.siparis_id=:siparis_id"; 
+            $stmt = $this->connect()->prepare($query);
+            $stmt->execute(['siparis_id' => $siparis_id]);
+            return  $stmt->fetch();
+        }
+    }
+    public function getIdsiparis()
+    {   
+        if(isset($_GET['siparis_id']))
+        {
+            $idSiparis = $_GET['siparis_id'];
+    
+            $query = "SELECT * FROM siparisler 
+                INNER JOIN masalar ON siparisler.masa_id = masalar.masa_id
+            WHERE siparisler.siparis_id=:siparis_id";
+            $stmt = $this->connect()->prepare($query);
+            $stmt->execute(['siparis_id' => $idSiparis]);
+            return  $stmt->fetch();
+        }
     }
     
     public function siparisEkle()
@@ -310,29 +327,79 @@ class Siparis extends Db
     {
         $siparis_id = $_GET['siparis_id'];
         
-        $query = "DELETE FROM siparisler WHERE siparis_id=:siparis_id";
-        $stmt = $this->connect()->prepare($query);
-        return $stmt->execute(['siparis_id' => $siparis_id]);
+        $querySiparisDetay = "DELETE FROM siparisdetay WHERE siparis_id=:siparis_id";
+        $stmtSiparisDetay = $this->connect()->prepare($querySiparisDetay);
+        $stmtSiparisDetay->execute(['siparis_id' => $siparis_id]);
+
+        $querySiparisler = "DELETE FROM siparisler WHERE siparis_id=:siparis_id";
+        $stmtSiparisler = $this->connect()->prepare($querySiparisler);
+        return $stmtSiparisler->execute(['siparis_id' => $siparis_id]);
     }
     
 }
 
 class SiparisDetay extends Db
 {
-    public function SiparisdetayGetir($siparis_id)
+    public function SiparisdetayGetir($siparis_detay_id)
     {
         
-            $query = "SELECT * FROM siparisdetay
+        $query = "SELECT * FROM siparisdetay
             INNER JOIN siparisler ON siparisdetay.siparis_id = siparisler.siparis_id
             INNER JOIN urunler ON siparisdetay.urun_id = urunler.urun_id
             WHERE siparisler.siparis_id=:siparis_id";
         $stmt = $this->connect()->prepare($query);
-        $stmt->execute(['siparis_id' => $siparis_id]);
+        $stmt->execute(['siparis_id' => $siparis_detay_id]);
         return $stmt->fetchAll();
+    }
+    public function siparisDetayIdGetir($siparis_detay_id)
+    {
+        $query = "SELECT siparisler.*, siparisdetay.* 
+        FROM siparisdetay
+        INNER JOIN siparisler ON siparisdetay.siparis_id = siparisler.siparis_id
+        WHERE siparisdetay.siparis_detay_id = :siparis_detay_id";
 
-        
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute(['siparis_detay_id' => $siparis_detay_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
+    public function siparisDetayEkle()
+    {
+        $siparis_masa_id= $_POST['siparis_id'];
+        $urun_id = $_POST['urun_id'];
+        $miktar = $_POST['miktar'];
 
+        $query = "INSERT INTO siparisdetay (siparis_id, urun_id, miktar) VALUES (:siparis_id, :urun_id, :miktar)";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([
+            'siparis_id' => $siparis_masa_id,
+            'urun_id' => $urun_id,
+            'miktar' => $miktar
+        ]);
+    }
+    public function siparisDetayGuncelle()
+    {
+        $siparis_detay_id = $_GET['siparis_detay_id'];
+        $siparis_masa_id= $_POST['siparis_id'];
+        $urun_id = $_POST['urun_id'];
+        $miktar = $_POST['miktar']; 
+
+        $query = "UPDATE siparisdetay SET siparis_id=:siparis_id, urun_id=:urun_id, miktar=:miktar WHERE siparis_detay_id=:siparis_detay_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute([
+            'siparis_detay_id' => $siparis_detay_id,
+            'siparis_id' => $siparis_masa_id,
+            'urun_id' => $urun_id,
+            'miktar' => $miktar
+        ]);
+    }
+    public function siparisDetaySil()
+    {
+        $siparis_detay_id = $_GET['siparis_detay_id'];
+
+        $query = "DELETE FROM siparisdetay WHERE siparis_detay_id =:siparis_detay_id";
+        $stmt = $this->connect()->prepare($query);
+        return $stmt->execute(['siparis_detay_id' => $siparis_detay_id]);
     }
 }
 

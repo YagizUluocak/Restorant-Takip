@@ -63,6 +63,8 @@ $siparisDetayGetir = $SiparisDetay->SiparisdetayGetir($siparis_detay_id);
         <div class="content">
             <div class="container">
                 <h1>Siparişler</h1>
+				<a class="btn btn-success btn-sm mb-2 mt-2" href="siparis-ekle.php"><i class="fa fa-plus"></i> Yeni Ekle</a>
+
                 <?php
                 if($deleted == true)
                 {
