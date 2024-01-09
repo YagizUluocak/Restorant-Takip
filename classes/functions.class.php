@@ -317,6 +317,24 @@ class Siparis extends Db
     
 }
 
+class SiparisDetay extends Db
+{
+    public function SiparisdetayGetir($siparis_id)
+    {
+        
+            $query = "SELECT * FROM siparisdetay
+            INNER JOIN siparisler ON siparisdetay.siparis_id = siparisler.siparis_id
+            INNER JOIN urunler ON siparisdetay.urun_id = urunler.urun_id
+            WHERE siparisler.siparis_id=:siparis_id";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute(['siparis_id' => $siparis_id]);
+        return $stmt->fetchAll();
+
+        
+
+
+    }
+}
 
 
 ?>

@@ -3,9 +3,12 @@ require_once('../classes/db.class.php');
 include "../classes/functions.class.php";
 
 $deleted = false;
-
+$kontrol = false;
 $Siparis = new Siparis();
 $siparisGetir = $Siparis->siparisGetir();
+
+
+
 
 // $_Get ile siparis_id, 'islem' geliyor mu? VE $_Get'den gelen 'islem' 'Sil'e eşit mi?
 if(isset($_GET['siparis_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil' )
@@ -16,7 +19,6 @@ if(isset($_GET['siparis_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil
     {
         $deleted = true;
         ?>
-        
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 var alertBox = document.getElementById('alertBox');
@@ -31,6 +33,18 @@ if(isset($_GET['siparis_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil
 
     }
 }
+
+if(isset($_GET['islem']) && $_GET['islem'] == 'detay' )
+{
+
+
+$kontrol = true;
+$siparis_detay_id = $_GET['siparis_detay_id'];
+$SiparisDetay = new SiparisDetay();
+$siparisDetayGetir = $SiparisDetay->SiparisdetayGetir($siparis_detay_id);
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +99,7 @@ if(isset($_GET['siparis_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil
                                         <td><?php echo $siparis->masa_adi?></td>
                                         <td><?php echo $siparis->siparis_tarihi?></td>
                                         <td><?php echo $siparis->siparis_durum?></td>
-                                        <td><a class="btn btn-warning btn-sm" href="siparis-detaylar.php?siparis_id=<?php echo $siparis->siparis_id?>"><i class="fa fa-eye"></i> Detay Gör</a></td>                
+                                        <td><a class="btn btn-primary btn-sm" href="siparis-detaylar.php?siparis_detay_id=<?php echo $siparis->siparis_id?>&islem=detay"><i class="fa fa-eye"></i> Detay Gör</a></td>                
                                         <td><a class="btn btn-warning btn-sm" href="siparis-duzenle.php?siparis_id=<?php echo $siparis->siparis_id?>"><i class="fa fa-pen"></i> Düzenle</a></td>                
                                         <td><a class="btn btn-danger btn-sm" href="siparis-list.php?siparis_id=<?php echo $siparis->siparis_id?>&islem=Sil"><i class="fa fa-trash"></i> İptal</a></td>                
                                     
@@ -93,7 +107,6 @@ if(isset($_GET['siparis_id']) && isset($_GET['islem']) && $_GET['islem'] == 'Sil
                                 <?php
                             }
                             ?>
-
                         </tbody>
                         <?php
                     }
